@@ -1,5 +1,7 @@
 # Exchange
 
+## Authenticated Endpoints
+
 {% api-method method="post" host="https://api.wcex.com/exchange" path="/order/new" %}
 {% api-method-summary %}
 Place a New Order
