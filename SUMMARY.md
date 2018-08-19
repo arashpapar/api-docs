@@ -1,7 +1,7 @@
 # Table of contents
 
-* [Introduction](overview.md)
-* [Overview](overview.md)
+* [Overview](README.md)
+* [Overview](README.md)
 * [Authentication](authentication.md)
 * [Exchange](private-endpoints.md)
 * [Trading](trading.md)
