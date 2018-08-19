@@ -156,14 +156,16 @@ An **`open`** event means that your order is now visible on the book with a non-
 {
     "event": "open",
     "sequence": 44,
-    "id": "bf2b704c-010a-48ca-93fb-d0193f24420a",
-    "product": "XT-BTC",
-    "size": "0.77942322",
-    "filled": "0.2451223",
-    "price": "0.05132",
-    "side": "buy",
-    "type": "limit",
-    "timestamp": 1511482279492
+    "data": {
+        "id": "bf2b704c-010a-48ca-93fb-d0193f24420a",
+        "product": "XT-BTC",
+        "size": "0.77942322",
+        "filled": "0.2451223",
+        "price": "0.05132",
+        "side": "buy",
+        "type": "limit",
+        "timestamp": 1511482279492
+    }
 }
 ```
 
@@ -173,13 +175,15 @@ A **`match`** event indicates that a trade occurred concerning one of your order
 {
     "event": "match",
     "sequence": 66,
-    "product": "XT-BTC",
-    "order_id_taker": "7ec97c53-75b2-4e9b-bdfa-6eca818f8c8d",
-    "order_id_maker": "5d818156-fc9a-4bfe-b0e3-1ef3f3f5d799",
-    "size": "11.774650",
-    "price": "0.04771",
-    "side": "buy",
-    "timestamp": 1511434619393
+    "data": {
+        "product": "XT-BTC",
+        "order_id_taker": "7ec97c53-75b2-4e9b-bdfa-6eca818f8c8d",
+        "order_id_maker": "5d818156-fc9a-4bfe-b0e3-1ef3f3f5d799",
+        "size": "11.774650",
+        "price": "0.04771",
+        "side": "buy",
+        "timestamp": 1511434619393
+    }
 }
 ```
 
@@ -189,13 +193,15 @@ A **`cancel`** event indicates that your cancel request has been processed by th
 {
     "event": "cancel",
     "sequence": 812,
-    "id": "31bf3a89-2a0a-40b0-9327-ec0a5cc3ce3c",
-    "product": "XT-BTC",
-    "size": "1.22393981",
-    "price": "0.03131",
-    "side": "buy",
-    "type": "limit",
-    "timestamp": 1511434617391
+    "data": {
+       "id": "31bf3a89-2a0a-40b0-9327-ec0a5cc3ce3c",
+        "product": "XT-BTC",
+        "size": "1.22393981",
+        "price": "0.03131",
+        "side": "buy",
+        "type": "limit",
+        "timestamp": 1511434617391
+    }
 }
 ```
 
@@ -205,11 +211,13 @@ A **`done`** event indicates that your order has been fully filled and is no lon
 {
     "event": "done",
     "sequence": 91,
-    "id": "bf2b704c-010a-48ca-93fb-d0193f24420a",
-    "product": "XT-BTC",
-    "price": "0.05132",
-    "side": "buy",
-    "timestamp": 1511434699393
+    "data": {
+        "id": "bf2b704c-010a-48ca-93fb-d0193f24420a",
+        "product": "XT-BTC",
+        "price": "0.05132",
+        "side": "buy",
+        "timestamp": 1511434699393
+    }
 }
 ```
 
@@ -222,7 +230,7 @@ A `balance` event is sent whenever one or more of your balances changes. If the 
     "event": "balance",
     "sequence": 22,
     "data": {
-        "XT-BTC": "3445.66760000"
+        "XT": "3445.66760000"
     }
 }
 ```
@@ -231,12 +239,222 @@ A `balance` event is sent whenever one or more of your balances changes. If the 
 
 #### Public
 
-* trading:candles:\[product\]:\[resolution\]
-* trading:quotes:\[product\]
+**`trading:quotes:[product]`**
+
+The `quote` event provides real-time price updates.
+
+```javascript
+{
+    "event": "quote",
+    "sequence": 889,
+    "data": [
+        "EUR-USD", // product
+        "1.12442", // mid price
+        "1.12439", // bid price
+        "1.12445", // ask price
+        151143431932 // timestamp
+    ]
+}
+```
 
 #### Authenticated
 
-* trading:orders
-* trading:positions
-* trading:balances
+**`trading:orders`**
+
+When subscribed to this channel, you can receive `order:new`, `order:cancel`, `order:activate`, and `order:update` events.
+
+An **`order:new`** event indicates that your order has been submitted and received by the trading engine.
+
+```javascript
+{
+    "event": "order:new",
+    "sequence": 827,
+    "data": {
+        "id": "bf2b704c-010a-48ca-93fb-d0193f24420a",
+        "product": "EUR-USD",
+        "price": "1.26635",
+        "side": "buy",
+        "leverage": "300",
+        "amount": 1000000,
+        "margin": "3.33333333",
+        "base_size": "1000",
+        "base_currency": "BTC",
+        "type": "market",
+        "liquidation_price": "1.26354",
+        "decay_rate": "0.0002",
+        "created_at": 1511482279492
+    }
+}
+```
+
+An **`order:cancel`** event indicates that your order has been cancelled.
+
+```javascript
+{
+    "event": "order:cancel",
+    "sequence": 332,
+    "data": {
+        "id": "bf2b704c-010a-48ca-93fb-d0193f24420a",
+        "product": "EUR-USD"
+    }
+}
+```
+
+An **`order:activate`** event indicates that your order is now an open position. This event is sent in parallel with **`position:new`**.
+
+```javascript
+{
+    "event": "order:activate",
+    "sequence": 93,
+    "data": {
+        "id": "bf2b704c-010a-48ca-93fb-d0193f24420a",
+        "product": "EUR-USD"
+    }
+}
+```
+
+An **`order:update`** event contains information relating to an order update. An order's price, margin, leverage, take-profit, and stop-loss can be updated. The event's data filed contains the full updated order object.
+
+```javascript
+{
+    "event": "order:update",
+    "sequence": 998,
+    "data": {
+        "id": "bf2b704c-010a-48ca-93fb-d0193f24420a",
+        "product": "EUR-USD",
+        "price": "1.26635",
+        "side": "buy",
+        "leverage": "300",
+        "amount": 1000000,
+        "margin": "3.33333333",
+        "base_size": "1000",
+        "base_currency": "BTC",
+        "type": "market",
+        "liquidation_price": "1.26354",
+        "take_profit": "1.28898",
+        "stop_loss": "1.26477",
+        "decay_rate": "0.0002",
+        "created_at": 1511482279492,
+        "updated_at": 1511482476135
+    }
+}
+```
+
+**`trading:positions`**
+
+When subscribed to this channel, you can receive `position:new`, `position:close`, `position:split`, and `position:update` events.
+
+A **`position:new`** event indicates that your position has been received by the trading engine and is now open.
+
+```javascript
+{
+    "event": "position:new",
+    "sequence": 124,
+    "data": {
+        "id": "bf2b704c-010a-48ca-93fb-d0193f24420a",
+        "product": "EUR-USD",
+        "price": "1.26635",
+        "side": "buy",
+        "leverage": "300",
+        "amount": 1000000,
+        "margin": "3.33333333",
+        "base_size": "1000",
+        "base_currency": "BTC",
+        "type": "market",
+        "liquidation_price": "1.26354",
+        "decay_rate": "0.0002",
+        "created_at": 1511482279492,
+        "opened_at": 1511482876413
+    }
+}
+```
+
+A **`position:close`** event indicates that your position was closed. A position can be closed manually or due to a trigger such as a take-profit or a liquidation.
+
+```javascript
+{
+    "event": "position:close",
+    "sequence": 1434,
+    "data": {
+        "id": "bf2b704c-010a-48ca-93fb-d0193f24420a",
+        "product": "EUR-USD",
+        "price": "1.26635",
+        "side": "buy",
+        "leverage": "300",
+        "amount": 1000000,
+        "margin": "3.33333333",
+        "base_size": "1000",
+        "base_currency": "BTC",
+        "type": "market",
+        "liquidation_price": "1.26354",
+        "decay_rate": "0.0002",
+        "close_price": "1.26995",
+        "pnl": "2.84281590",
+        "pnl_percent": "85.2845",
+        "reason": "manual",
+        "decay": "0",
+        "created_at": 1511482279492,
+        "opened_at": 1511482876413,
+        "closed_at": 1511483816212
+    }
+}
+```
+
+A **`position:split`** event indicates that your position was split into two positions.
+
+```javascript
+{
+    "event": "position:split",
+    "sequence": 398,
+    "data": {
+        "parent_id": "bf2b704c-010a-48ca-93fb-d0193f24420a",
+        "first_position": { ... }
+        "second_position": { ... }
+    }
+}
+```
+
+An **`position:update`** event contains information relating to a position update. You can update a position's margin, leverage, take-profit, and stop-loss. The event's data filed contains the full updated position object.
+
+```javascript
+{
+    "event": "position:update",
+    "sequence": 135,
+    "data": {
+        "id": "bf2b704c-010a-48ca-93fb-d0193f24420a",
+        "product": "EUR-USD",
+        "price": "1.26635",
+        "side": "buy",
+        "leverage": "300",
+        "amount": 1000000,
+        "margin": "3.33333333",
+        "base_size": "1000",
+        "base_currency": "BTC",
+        "type": "market",
+        "liquidation_price": "1.26354",
+        "take_profit": "1.28898",
+        "stop_loss": "1.26477",
+        "decay_rate": "0.0002",
+        "created_at": 1511482279492,
+        "opened_at": 1511482876413,
+        "updated_at": 1511486476135
+    }
+}
+```
+
+**`trading:balances`**
+
+A `balance` event is sent whenever one or more of your balances changes.
+
+```javascript
+{
+    "event": "balance",
+    "sequence": 233,
+    "data": {
+        "BTC": "33.99388733"
+    }
+}
+```
+
+
 
