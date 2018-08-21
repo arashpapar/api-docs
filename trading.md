@@ -168,10 +168,6 @@ Updated margin amount for the order.
 {% api-method-parameter name="leverage" type="number" required=false %}
 Updated leverage multiplier for the order.
 {% endapi-method-parameter %}
-
-{% api-method-parameter name="amount" type="integer" required=false %}
-Updated amount in contracts for the order.
-{% endapi-method-parameter %}
 {% endapi-method-body-parameters %}
 {% endapi-method-request %}
 
@@ -209,6 +205,8 @@ Updated amount in contracts for the order.
 For pending orders, `price`, `margin`, `leverage`, `amount`, `take_profit`, and `stop_loss` can be updated.
 
 For open positions, `margin`, `leverage`, `take_profit`, and `stop_loss` can be updated.
+
+To remove a `take_profit` or `stop_loss`, simply set it to `0`.
 
 Margin can only be increased, not decreased. Accordingly, leverage can only be decreased, not increased.
 

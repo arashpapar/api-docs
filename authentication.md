@@ -54,5 +54,5 @@ return hmac.update(message_to_sign).digest('base64');
 
 `WCX-TIMESTAMP` is the current timestamp, in milliseconds since UNIX epoch. Providing it helps prevent man-in-the-middle attacks and provides request replay protection.
 
-It has to be within 30 seconds of server time for the request to be valid. You can check the server time using the [/time](overview-1.md#get-server-time) endpoint.
+It has to be within 30 seconds of server time for the request to be valid. You can check the server time using the [/time]() endpoint.
 
