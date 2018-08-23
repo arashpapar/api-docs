@@ -39,7 +39,7 @@ Amount in contracts.
 {% endapi-method-parameter %}
 
 {% api-method-parameter name="base\_currency" type="string" required=true %}
-Can be `BTC`, `ETH`, or `LTC`.
+Must be `BTC`.
 {% endapi-method-parameter %}
 
 {% api-method-parameter name="price" type="string" required=false %}
