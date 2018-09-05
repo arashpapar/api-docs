@@ -20,7 +20,7 @@ where:
 
 * `timestamp` is the millisecond timestamp, the same one you pass to the `WCX-TIMESTAMP` header
 * `method` is the UPPER CASE HTTP method used to make the request \(`GET`, `POST`, `PUT`, or `DELETE`\)
-* `path` is the request path, e.g. `/new-order` \(without query parameters\)
+* `path` is the request path, e.g. `/exchange/order/new` \(without query parameters\)
 * `body` is the JSON-stringified body sent in the request. This generally applies to `POST` requests and can be omitted for requests without a body.
 
 Generate a SHA-256 HMAC of this string using your API secret, then Base64-encode the output to get `WCX-SIG`.
@@ -35,14 +35,13 @@ const API_SECRET = "6a0ef...";
 const TIMESTAMP = Date.now();
 
 const body = JSON.stringify({
-    product: "ETH-BTC",
-    side: "sell",
+    product: "XT-BTC",
+    side: "buy",
     size: "10",
-    price: "0.04",
-    condition: "PO"
+    price: "0.04"
 });
 
-const message_to_sign = TIMESTAMP + "POST" + "/new-order" + body;
+const message_to_sign = TIMESTAMP + "POST" + "/exchange/order/new" + body;
 
 const hmac = crypto.createHmac('sha256', API_SECRET);
 
