@@ -208,6 +208,8 @@ For open positions, `margin`, `leverage`, `take_profit`, and `stop_loss` can be 
 
 To remove a `take_profit` or `stop_loss`, simply set it to `0`.
 
+You can set both `margin` and `leverage` in the same request, but `margin` will always take precedence.
+
 Margin can only be increased, not decreased. Accordingly, leverage can only be decreased, not increased.
 
 {% api-method method="post" host="https://api.wcex.com/trading" path="/trade/close" %}
@@ -216,7 +218,7 @@ Close Position
 {% endapi-method-summary %}
 
 {% api-method-description %}
-Closes a position at market price. Sells close at the ask,  buys at the bid.
+Closes a position at market price. Sells close at the ask, buys at the bid.
 {% endapi-method-description %}
 
 {% api-method-spec %}

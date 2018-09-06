@@ -50,7 +50,7 @@ To receive events from authenticated channels, you must authenticate when sendin
 
 Authentication is similar to REST request signing and authentication. Pass in an `auth` field in your `subscribe` message containing:
 
-* `key` Your API key
+* `key` Your API key \(you can use any API key on your Trading account\)
 * `sig` The signed message for the `GET /ws-auth` request, with no body. See [Signing a Request](authentication.md#signing-a-request).
 * `timestamp` The current time in milliseconds since UNIX epoch
 
