@@ -1,4 +1,4 @@
-# Trading
+# Margin Trading
 
 **Endpoint URL**
 

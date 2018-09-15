@@ -235,7 +235,7 @@ A `balance` event is sent whenever one or more of your balances changes. If the 
 }
 ```
 
-### Trading
+### Margin Trading
 
 #### Public
 
