@@ -638,7 +638,7 @@ A valid asset.
 
 ## Public Endpoints
 
-{% api-method method="get" host="https://api.wcex.com/exchange" path="/products/:product?" %}
+{% api-method method="get" host="https://api.wcex.com/trading" path="/products/:product?" %}
 {% api-method-summary %}
 Get Products
 {% endapi-method-summary %}
@@ -663,16 +663,20 @@ Limits results returned to this products.
 {% endapi-method-response-example-description %}
 
 ```javascript
-[
-    [
-        "EUR-USD", // product
-        "300", // max leverage
-        "0.00001", // tick
-        "0.0003", // decay rate
-        "10000000" // max size, in contracts
-    ],
+{
+    "forex": [
+        [
+            "EUR-USD", // product
+            "300", // max leverage
+            "0.00001", // tick
+            "-0.0001", // decay rate
+            {
+                "BTC": "600000" // max size
+            }
+            "EUR/USD" // name
+        ],
     ...
-]
+}
 ```
 {% endapi-method-response-example %}
 {% endapi-method-response %}
@@ -727,7 +731,7 @@ E.g. `/book/XT-BTC?limit=50`.
 
 Polling this endpoint is discouraged in favor of subscribing to WebSocket events.
 
-{% api-method method="get" host="https://api.wcex.com/exchange" path="/trades/:product" %}
+{% api-method method="get" host="https://api.wcex.com/trading" path="/trades/:product" %}
 {% api-method-summary %}
 Get Trade History
 {% endapi-method-summary %}
@@ -796,7 +800,7 @@ Polling this endpoint is discouraged in favor of subscribing to WebSocket events
 
 `side` indicates the taker order side. A `buy` indicates an up-tick and a `sell` indicates a down-tick.
 
-{% api-method method="get" host="https://api.wcex.com/exchange" path="/candles/:product/:resolution" %}
+{% api-method method="get" host="https://api.wcex.com/trading" path="/candles/:product/:resolution" %}
 {% api-method-summary %}
 Get Candles
 {% endapi-method-summary %}
