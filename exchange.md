@@ -2,7 +2,7 @@
 
 **Endpoint URL**
 
-**`https://api.wcex.com/exchange`**
+`https://api.wcex.com/exchange`
 
 ## Authenticated Endpoints
 
@@ -65,7 +65,7 @@ Order successfully submitted.
 
 Currently, only limit orders are supported. To have your order execute immediately \(as a market order\), simply set a price deep in the opposite book.
 
-#### Order Lifecycle
+### Order Lifecycle
 
 Your account must have sufficient balance to successfully submit an order.
 
@@ -73,7 +73,7 @@ If any part of the order results in adding liquidity to the book, it will be mar
 
 An order that is completely filled and off the book will be marked as **done**.
 
-#### Response
+### Response
 
 An order accepted by the matching engine will be assigned an order `id`which will appear in the response.
 
@@ -121,7 +121,7 @@ The order's product.
 
 Providing `product` is optional, but it's recommended because it greatly speeds up the cancel operation by skipping the id-to-product lookup.
 
-#### Response
+### Response
 
 If successful, the response will contain the ID of the cancelled order.
 
@@ -184,13 +184,13 @@ You can optionally pass a `limit` query parameter to limit the number of orders 
 
 E.g. `/orders?limit=50`.
 
-#### Keeping track of your orders
+### Keeping track of your orders
 
 We recommend listening to streaming WebSocket order events to maintain an up-to-date view of your open orders. It's faster and in many cases more accurate than polling this endpoint, because an order's state may change between the time you make an HTTP request and receive a response.
 
 Polling this endpoint is highly discouraged.
 
-#### Response
+### Response
 
 An array of your open orders.
 
@@ -259,13 +259,13 @@ Omitting `product` will return fills across all products.
 
 E.g. `/fills?limit=50&timestamp=1511481127561`
 
-#### Keeping track of your fills
+### Keeping track of your fills
 
 We recommend listening to streaming WebSocket match events to maintain an up-to-date view of your fills. It's faster and more accurate than polling this endpoint.
 
 Polling this endpoint is highly discouraged.
 
-#### Response
+### Response
 
 An array of your recent fills.
 
@@ -612,7 +612,7 @@ E.g. `/trades/XT-BTC?limit=50&timestamp=1511481127561`.
 
 Polling this endpoint is discouraged in favor of subscribing to WebSocket events.
 
-#### Response
+### Response
 
 `side` indicates the taker order side. A `buy` indicates an up-tick and a `sell` indicates a down-tick.
 
@@ -693,7 +693,7 @@ Number of candles to return \(max 150\).
 
 E.g. `/candles/XT-BTC/60?start=1511480127561&end=1511480129513` fetches 1h candles on XT/BTC between the start and end timestamps.
 
-#### Response
+### Response
 
 Each item in the array returned represents a candle with granularity `resolution`:
 
@@ -704,6 +704,5 @@ Each item in the array returned represents a candle with granularity `resolution
 * **close** \(last trade in this interval\)
 * **volume** \(volume of trading during this interval\)
 
-`volume` is returned as string to preserve float number precision. If the candle is active, `close` is the last price.  
-
+`volume` is returned as string to preserve float number precision. If the candle is active, `close` is the last price.
 

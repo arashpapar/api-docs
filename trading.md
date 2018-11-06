@@ -294,15 +294,7 @@ A ratio of percents. E.g. `40:60`
 {% endapi-method-response-example-description %}
 
 ```javascript
-{
-    "event": "position:split",
-    "sequence": 398,
-    "data": {
-        "parent_id": "bf2b704c-010a-48ca-93fb-d0193f24420a",
-        "first_position": { ... }
-        "second_position": { ... }
-    }
-}
+
 ```
 {% endapi-method-response-example %}
 {% endapi-method-response %}
