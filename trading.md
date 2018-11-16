@@ -89,6 +89,8 @@ A trade with type `market` will result in an open position.
 
 A trade with type `pending` will result in a pending order and behaves as either a limit or stop order depending on its price \(it works in both directions\).
 
+For demo trading, add `?demo=true` to your request.
+
 #### Response
 
 A trade accepted by the engine will be assigned a trade `id`which will appear in the response.
@@ -126,6 +128,8 @@ The ID of the order to cancel.
 {% endapi-method-response %}
 {% endapi-method-spec %}
 {% endapi-method %}
+
+For demo trading, add `?demo=true` to your request.
 
 #### Response
 
@@ -212,6 +216,8 @@ You can set both `margin` and `leverage` in the same request, but `margin` will 
 
 Margin can only be increased, not decreased. Accordingly, leverage can only be decreased, not increased.
 
+For demo trading, add `?demo=true` to your request.
+
 {% api-method method="post" host="https://api.wcex.com/trading" path="/trade/close" %}
 {% api-method-summary %}
 Close Position
@@ -265,6 +271,8 @@ The ID of the position to close.
 {% endapi-method-spec %}
 {% endapi-method %}
 
+For demo trading, add `?demo=true` to your request.
+
 {% api-method method="post" host="https://api.wcex.com/trading" path="/trade/split" %}
 {% api-method-summary %}
 Split Position
@@ -307,6 +315,8 @@ A ratio of percents. E.g. `40:60`
 {% endapi-method-response %}
 {% endapi-method-spec %}
 {% endapi-method %}
+
+For demo trading, add `?demo=true` to your request.
 
 {% api-method method="get" host="https://api.wcex.com/trading" path="/orders" %}
 {% api-method-summary %}
@@ -359,6 +369,8 @@ Number of orders to return \(max is 100\).
 You can optionally pass a `limit` query parameter to limit the number of orders returned. By default, 100 items are returned.
 
 E.g. `/orders?limit=50`.
+
+For demo trading, add `?demo=true` to your request.
 
 #### Keeping track of your orders
 
@@ -418,6 +430,8 @@ Number of positions to return \(max is 100\).
 {% endapi-method-response %}
 {% endapi-method-spec %}
 {% endapi-method %}
+
+For demo trading, add `?demo=true` to your request.
 
 {% api-method method="get" host="https://api.wcex.com/trading" path="/history/:product?" %}
 {% api-method-summary %}
@@ -483,6 +497,8 @@ Omitting `product` will return trades across all products.
 
 E.g. `/history?limit=50&timestamp=1511481127561`
 
+For demo trading, add `?demo=true` to your request.
+
 #### Keeping track of your trades
 
 We recommend listening to streaming WebSocket match events to maintain an up-to-date view of your closed positions. It's faster and more accurate than polling this endpoint.
@@ -529,6 +545,8 @@ Limits balances returned to this asset.
 {% endapi-method %}
 
 Omitting `asset` will return all balances on your account. Only non-zero balances, or assets for which you have made at least one deposit will be returned.
+
+For demo trading, add `?demo=true` to your request.
 
 {% api-method method="get" host="https://api.wcex.com/trading" path="/transactions/:type" %}
 {% api-method-summary %}

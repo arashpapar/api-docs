@@ -259,6 +259,8 @@ The `quote` event provides real-time price updates.
 
 #### Authenticated
 
+For demo trading, channels and events have a `_demo` suffix. E.g. `trading:orders_demo`, `order_demo:new`, `position_demo:close`, `trading:balances_demo`, etc.
+
 **`trading:orders`**
 
 When subscribed to this channel, you can receive `order:new`, `order:cancel`, `order:activate`, and `order:update` events.
