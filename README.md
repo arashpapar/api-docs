@@ -6,6 +6,8 @@ WCX offers REST and WebSocket APIs for both the exchange and our margin trading 
 
 You can use the API to programmatically place new orders, check your balance, or stream real-time price updates, among other things.
 
+For margin trading, both real and demo trading are supported.
+
 All request and response bodies are encoded in JSON \(`application/json`\). All requests must be made over SSL.
 
 ## Data Types
