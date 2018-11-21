@@ -54,7 +54,7 @@ const WCX_SIG = hmac.update(message_to_sign).digest('base64');
 
 request({
 	method: METHOD,
-	url: "https://api.prod.wcex.com/exchange/order/new",
+	url: "https://api.wcex.com/exchange/order/new",
 	json: body_json,
 	headers: {
 		"WCX-APIKEY": "de53e16e-...",
