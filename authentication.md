@@ -20,7 +20,7 @@ where:
 
 * `timestamp` is the millisecond timestamp, the same one you pass to the `WCX-TIMESTAMP` header
 * `method` is the UPPER CASE HTTP method used to make the request \(`GET`, `POST`, `PUT`, or `DELETE`\)
-* `path` is the request path, e.g. `/order/new` \(without query parameters or account - omit the `/trading` or `/exchange`\)
+* `path` is the request path, e.g. `/order/new` or `/order/new?demo=true` \(omit the `/trading` or `/exchange`\)
 * `body` is the JSON-stringified body sent in the request. This generally applies to `POST` requests and can be omitted for requests without a body.
 
 Generate a SHA-256 HMAC of this string using your API secret, then Base64-encode the output to get `WCX-SIG`.
