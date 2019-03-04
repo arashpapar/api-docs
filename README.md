@@ -10,6 +10,13 @@ For margin trading, both real and demo trading are supported.
 
 All request and response bodies are encoded in JSON (`application/json`). All requests must be made over SSL.
 
+## Table of contents
+
+* [Authentication](authentication.md)
+* [Margin Trading](trading.md)
+* [Exchange](exchange.md)
+* [WebSocket](subscribe.md)
+
 ## Data Types
 
 **Timestamp**  
