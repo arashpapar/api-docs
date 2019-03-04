@@ -8,7 +8,7 @@ You can use the API to programmatically place new orders, check your balance, or
 
 For margin trading, both real and demo trading are supported.
 
-All request and response bodies are encoded in JSON \(`application/json`\). All requests must be made over SSL.
+All request and response bodies are encoded in JSON (`application/json`). All requests must be made over SSL.
 
 ## Data Types
 
@@ -54,39 +54,23 @@ If the request is successful, a `200` \(OK\) status code is returned, along with
 
 **`wss://data.wcex.com`**
 
-{% api-method method="get" host="https://api.wcex.com" path="/time" %}
-{% api-method-summary %}
-Get Server Time
-{% endapi-method-summary %}
+### Get Server Time
 
-{% api-method-description %}
+**`https://api.wcex.com/time`**
+
 Returns the server time.
-{% endapi-method-description %}
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-query-parameters %}
-{% api-method-parameter name="client\_time" type="number" required=false %}
-Send client\_time \(in ms since Epoch\) to include the time drift between your client and our server in the response.
-{% endapi-method-parameter %}
-{% endapi-method-query-parameters %}
-{% endapi-method-request %}
+#### Request
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
+**Query Parameters**
 
-{% endapi-method-response-example-description %}
+| Parameter | Type | Description |
+| client\_time (optional) | number | Send client\_time \(in ms since Epoch\) to include the time drift between your client and our server in the response. |
+
+#### Response
 
 ```javascript
 {
     "timestamp": 1511572042589
 }
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
-
-
-
