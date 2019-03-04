@@ -1,6 +1,6 @@
 # Exchange
 
-**Endpoint URL**
+**Base Endpoint URL**
 
 **`https://api.wcex.com/exchange`**
 

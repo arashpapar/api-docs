@@ -1,66 +1,41 @@
 # Margin Trading
 
-**Endpoint URL**
+**Base Endpoint URL**
 
 **`https://api.wcex.com/trading`**
 
 ## Authenticated Endpoints
 
-{% api-method method="post" host="https://api.wcex.com/trading" path="/trade/new" %}
-{% api-method-summary %}
-Place a New Order
-{% endapi-method-summary %}
+### Place a New Order
 
-{% api-method-description %}
+**`https://api.wcex.com/trading/trade/new`**
 
-{% endapi-method-description %}
+#### Request (POST)
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-body-parameters %}
-{% api-method-parameter name="product" type="string" required=true %}
-A valid product.
-{% endapi-method-parameter %}
+| Body Parameter | Type | Description |
+| :--- | :--- | :--- |
+| product | `string` | A valid product. |
+| side | `string` | Can be `buy` or `sell`. |
+| type | `string` | Can be `market` or `pending`. |
+| leverage | `number` | Leverage to use. |
+| amount | `integer` | Amount in contracts (1 contract = 0.001 BTC). |
+| base_currency | `string` | Must be `BTC`. |
+| price (optional) | `string` | 
+Required only if type is pending. |
+| take_profit (optional) | `string` | 
+The trade's take-profit price. |
+| stop_loss (optional) | `string` | 
+The trade's stop-loss price. |
 
-{% api-method-parameter name="side" type="string" required=true %}
-Can be `buy` or `sell`.
-{% endapi-method-parameter %}
+A trade with type `market` will result in an open position.
 
-{% api-method-parameter name="type" type="string" required=true %}
-Can be `market` or `pending`.
-{% endapi-method-parameter %}
+A trade with type `pending` will result in a pending order and behaves as either a limit or stop order depending on its price \(it works in both directions\).
 
-{% api-method-parameter name="leverage" type="number" required=true %}
-Leverage to use.
-{% endapi-method-parameter %}
+For demo trading, add `?demo=true` to your request.
 
-{% api-method-parameter name="amount" type="integer" required=true %}
-Amount in contracts.
-{% endapi-method-parameter %}
+#### Response
 
-{% api-method-parameter name="base\_currency" type="string" required=true %}
-Must be `BTC`.
-{% endapi-method-parameter %}
-
-{% api-method-parameter name="price" type="string" required=false %}
-Required only if type is `pending`.
-{% endapi-method-parameter %}
-
-{% api-method-parameter name="take\_profit" type="string" required=false %}
-The trade's take-profit price.
-{% endapi-method-parameter %}
-
-{% api-method-parameter name="stop\_loss" type="string" required=false %}
-The trade's stop-loss price.
-{% endapi-method-parameter %}
-{% endapi-method-body-parameters %}
-{% endapi-method-request %}
-
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
-Order successfully submitted.
-{% endapi-method-response-example-description %}
+A trade accepted by the engine will be assigned a trade `id` which will appear in the response.
 
 ```javascript
 {
@@ -80,54 +55,16 @@ Order successfully submitted.
         "opened_at": 1511482876413
 }
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
 
-A trade with type `market` will result in an open position.
+### Cancel Order
 
-A trade with type `pending` will result in a pending order and behaves as either a limit or stop order depending on its price \(it works in both directions\).
+**`https://api.wcex.com/trading/trade/cancel`**
 
-For demo trading, add `?demo=true` to your request.
+#### Request (POST)
 
-#### Response
-
-A trade accepted by the engine will be assigned a trade `id`which will appear in the response.
-
-{% api-method method="post" host="https://api.wcex.com/trading" path="/trade/cancel" %}
-{% api-method-summary %}
-Cancel Order
-{% endapi-method-summary %}
-
-{% api-method-description %}
-
-{% endapi-method-description %}
-
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-body-parameters %}
-{% api-method-parameter name="id" type="string" required=true %}
-The ID of the order to cancel.
-{% endapi-method-parameter %}
-{% endapi-method-body-parameters %}
-{% endapi-method-request %}
-
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
-
-{% endapi-method-response-example-description %}
-
-```javascript
-{
-    "id": "9d335cce-d581-45f6-8efc-bdab3d61c6e2"
-}
-```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
+| Body Parameter | Type | Description |
+| :--- | :--- | :--- |
+| id | `string` | The ID of the order to cancel. |
 
 For demo trading, add `?demo=true` to your request.
 
@@ -137,49 +74,36 @@ If successful, the response will contain the ID of the cancelled order.
 
 If an order could not be cancelled \(if it has been already filled, does not exist, etc.\), an error is returned.
 
-{% api-method method="post" host="https://api.wcex.com/trading" path="/trade/update" %}
-{% api-method-summary %}
-Update Order
-{% endapi-method-summary %}
+```javascript
+{
+    "id": "9d335cce-d581-45f6-8efc-bdab3d61c6e2"
+}
+```
 
-{% api-method-description %}
+### Update Order
+
+**`https://api.wcex.com/trading/trade/update`**
+
 Updates an order or position.
-{% endapi-method-description %}
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-body-parameters %}
-{% api-method-parameter name="id" type="string" required=true %}
-The ID of the order or position to update.s
-{% endapi-method-parameter %}
+#### Request (POST)
 
-{% api-method-parameter name="price" type="number" required=false %}
-New price for the order.
-{% endapi-method-parameter %}
+| Body Parameter | Type | Description |
+| :--- | :--- | :--- |
+| id | `string` | The ID of the order to update. |
+| price (optional) | `number` | New price of the order. |
+| take_profit (optional) | `number` | New take-profit price for the order. |
+| stop_loss (optional) | `number` | New stop-loss price for the order. |
 
-{% api-method-parameter name="take\_profit" type="number" required=false %}
-New take-profit price for the order.
-{% endapi-method-parameter %}
+For pending orders, `price`, `take_profit`, and `stop_loss` can be updated.
 
-{% api-method-parameter name="stop\_loss" type="number" required=false %}
-New stop-loss price for the order.
-{% endapi-method-parameter %}
+For open positions, `take_profit` and `stop_loss` can be updated.
 
-{% api-method-parameter name="margin" type="number" required=false %}
-Updated margin amount for the order.
-{% endapi-method-parameter %}
+To remove a `take_profit` or `stop_loss`, simply set it to `0`.
 
-{% api-method-parameter name="leverage" type="number" required=false %}
-Updated leverage multiplier for the order.
-{% endapi-method-parameter %}
-{% endapi-method-body-parameters %}
-{% endapi-method-request %}
+For demo trading, add `?demo=true` to your request.
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
-
-{% endapi-method-response-example-description %}
+#### Response
 
 ```javascript
 {
@@ -201,46 +125,22 @@ Updated leverage multiplier for the order.
       "updated_at": 1511482476135
 }
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
 
-For pending orders, `price`, `margin`, `leverage`, `amount`, `take_profit`, and `stop_loss` can be updated.
+### Close Position
 
-For open positions, `margin`, `leverage`, `take_profit`, and `stop_loss` can be updated.
+**`https://api.wcex.com/trading/trade/close`**
 
-To remove a `take_profit` or `stop_loss`, simply set it to `0`.
+Closes a position at market price. Sells close at the ask, buys at the bid.
 
-You can set both `margin` and `leverage` in the same request, but `margin` will always take precedence.
+#### Request (POST)
 
-Margin can only be increased, not decreased. Accordingly, leverage can only be decreased, not increased.
+| Body Parameter | Type | Description |
+| :--- | :--- | :--- |
+| id | `string` | The ID of the position to close. |
 
 For demo trading, add `?demo=true` to your request.
 
-{% api-method method="post" host="https://api.wcex.com/trading" path="/trade/close" %}
-{% api-method-summary %}
-Close Position
-{% endapi-method-summary %}
-
-{% api-method-description %}
-Closes a position at market price. Sells close at the ask, buys at the bid.
-{% endapi-method-description %}
-
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-body-parameters %}
-{% api-method-parameter name="id" type="string" required=true %}
-The ID of the position to close.
-{% endapi-method-parameter %}
-{% endapi-method-body-parameters %}
-{% endapi-method-request %}
-
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
-
-{% endapi-method-response-example-description %}
+#### Response
 
 ```javascript
 {
@@ -266,40 +166,23 @@ The ID of the position to close.
         "closed_at": 1511483816212
 }
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
+
+### Split Position
+
+**`https://api.wcex.com/trading/trade/split`**
+
+Splits a position into two positions that can be managed separately.
+
+#### Request (POST)
+
+| Body Parameter | Type | Description |
+| :--- | :--- | :--- |
+| id | `string` | The ID of the position to close. |
+| ratio | `string` | A ratio of percents. E.g. `40:60`. |
 
 For demo trading, add `?demo=true` to your request.
 
-{% api-method method="post" host="https://api.wcex.com/trading" path="/trade/split" %}
-{% api-method-summary %}
-Split Position
-{% endapi-method-summary %}
-
-{% api-method-description %}
-Splits a position into two positions that can be managed separately.
-{% endapi-method-description %}
-
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-body-parameters %}
-{% api-method-parameter name="id" type="string" required=true %}
-The ID of the position to split.
-{% endapi-method-parameter %}
-
-{% api-method-parameter name="ratio" type="string" required=true %}
-A ratio of percents. E.g. `40:60`
-{% endapi-method-parameter %}
-{% endapi-method-body-parameters %}
-{% endapi-method-request %}
-
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
-
-{% endapi-method-response-example-description %}
+#### Response
 
 ```javascript
 {
@@ -311,36 +194,34 @@ A ratio of percents. E.g. `40:60`
 	}
 }
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
+
+### Get Orders
+
+**`https://api.wcex.com/trading/orders`**
+
+Lists your pending orders, sorted by submission time (most recent first).
+
+#### Request
+
+| Query Parameter | Type | Description |
+| :--- | :--- | :--- |
+| limit (optional) | `integer` | Number of orders to return (max is 100). |
+
+You can optionally pass a `limit` query parameter to limit the number of orders returned. By default, 100 items are returned.
+
+E.g. `/orders?limit=50`.
 
 For demo trading, add `?demo=true` to your request.
 
-{% api-method method="get" host="https://api.wcex.com/trading" path="/orders" %}
-{% api-method-summary %}
-Get Orders
-{% endapi-method-summary %}
+#### Keeping track of your orders
 
-{% api-method-description %}
-Lists your pending orders, sorted by submission time \(most recent first\).
-{% endapi-method-description %}
+We recommend listening to streaming WebSocket order events to maintain an up-to-date view of your open orders. It's faster and in many cases more accurate than polling this endpoint, because an order's state may change between the time you make an HTTP request and receive a response.
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-query-parameters %}
-{% api-method-parameter name="limit" type="integer" required=false %}
-Number of orders to return \(max is 100\).
-{% endapi-method-parameter %}
-{% endapi-method-query-parameters %}
-{% endapi-method-request %}
+Polling this endpoint is highly discouraged.
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
+#### Response
 
-{% endapi-method-response-example-description %}
+An array of your pending orders.
 
 ```javascript
 [
@@ -361,50 +242,22 @@ Number of orders to return \(max is 100\).
     }
 ]
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
 
-You can optionally pass a `limit` query parameter to limit the number of orders returned. By default, 100 items are returned.
+### Get Positions
 
-E.g. `/orders?limit=50`.
+**`https://api.wcex.com/trading/positions`**
+
+Lists your open positions, sorted by opening time.
+
+#### Request
+
+| Query Parameter | Type | Description |
+| :--- | :--- | :--- |
+| limit (optional) | `integer` | Number of positions to return (max is 100). |
 
 For demo trading, add `?demo=true` to your request.
 
-#### Keeping track of your orders
-
-We recommend listening to streaming WebSocket order events to maintain an up-to-date view of your open orders. It's faster and in many cases more accurate than polling this endpoint, because an order's state may change between the time you make an HTTP request and receive a response.
-
-Polling this endpoint is highly discouraged.
-
 #### Response
-
-An array of your pending orders.
-
-{% api-method method="get" host="https://api.wcex.com/trading" path="/positions" %}
-{% api-method-summary %}
-Get Positions
-{% endapi-method-summary %}
-
-{% api-method-description %}
-Lists your open positions, sorted by opening time.
-{% endapi-method-description %}
-
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-query-parameters %}
-{% api-method-parameter name="limit" type="integer" required=false %}
-Number of positions to return \(max is 100\).
-{% endapi-method-parameter %}
-{% endapi-method-query-parameters %}
-{% endapi-method-request %}
-
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
-
-{% endapi-method-response-example-description %}
 
 ```javascript
 [
@@ -426,46 +279,39 @@ Number of positions to return \(max is 100\).
     }
 ]
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
+
+### Get History
+
+**`https://api.wcex.com/trading/history/:product?`**
+
+List your recent trades (closed positions), ordered by close time.
+
+#### Request
+
+| Path Parameter | Type | Description |
+| :--- | :--- | :--- |
+| product (optional) | `string` | Limit trades returned to this product. |
+
+| Query Parameter | Type | Description |
+| :--- | :--- | :--- |
+| timestamp (optional) | `integer` | Return trades that occurred before this time. |
+| limit (optional) | `integer` | Number of trades to return (max is 100). |
+
+Omitting `product` will return trades across all products.
+
+E.g. `/history?limit=50&timestamp=1511481127561`
 
 For demo trading, add `?demo=true` to your request.
 
-{% api-method method="get" host="https://api.wcex.com/trading" path="/history/:product?" %}
-{% api-method-summary %}
-Get History
-{% endapi-method-summary %}
+#### Keeping track of your trades
 
-{% api-method-description %}
-List your recent trades \(closed positions\), ordered by close time.
-{% endapi-method-description %}
+We recommend listening to streaming WebSocket match events to maintain an up-to-date view of your closed positions. It's faster and more accurate than polling this endpoint.
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-path-parameters %}
-{% api-method-parameter name="product" type="string" required=false %}
-Limit trades returned to this product.
-{% endapi-method-parameter %}
-{% endapi-method-path-parameters %}
+Polling this endpoint is highly discouraged.
 
-{% api-method-query-parameters %}
-{% api-method-parameter name="timestamp" type="number" required=false %}
-Return trades that occurred before this time.
-{% endapi-method-parameter %}
+#### Response
 
-{% api-method-parameter name="limit" type="number" required=false %}
-Number of trades to return \(max is 100\).
-{% endapi-method-parameter %}
-{% endapi-method-query-parameters %}
-{% endapi-method-request %}
-
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
-
-{% endapi-method-response-example-description %}
+An array of your recent trades.
 
 ```javascript
 [
@@ -488,103 +334,57 @@ Number of trades to return \(max is 100\).
     }
 ]
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
 
-Omitting `product` will return trades across all products.
+### Get Balances
 
-E.g. `/history?limit=50&timestamp=1511481127561`
+**`https://api.wcex.com/trading/balances/:asset?`**
 
-For demo trading, add `?demo=true` to your request.
-
-#### Keeping track of your trades
-
-We recommend listening to streaming WebSocket match events to maintain an up-to-date view of your closed positions. It's faster and more accurate than polling this endpoint.
-
-Polling this endpoint is highly discouraged.
-
-#### Response
-
-An array of your recent trades.
-
-{% api-method method="get" host="https://api.wcex.com/trading" path="/balances/:asset?" %}
-{% api-method-summary %}
-Get Balances
-{% endapi-method-summary %}
-
-{% api-method-description %}
 Lists your balances.
-{% endapi-method-description %}
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-path-parameters %}
-{% api-method-parameter name="asset" type="string" required=false %}
-Limits balances returned to this asset.
-{% endapi-method-parameter %}
-{% endapi-method-path-parameters %}
-{% endapi-method-request %}
+#### Request
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
-
-{% endapi-method-response-example-description %}
-
-```javascript
-{
-    "BTC": "11.88900211",
-    "ETH": "2218.99900000"
-}
-```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
+| Path Parameter | Type | Description |
+| :--- | :--- | :--- |
+| asset (optional) | `string` | Limit balances returned to this asset. |
 
 Omitting `asset` will return all balances on your account. Only non-zero balances, or assets for which you have made at least one deposit will be returned.
 
 For demo trading, add `?demo=true` to your request.
 
-{% api-method method="get" host="https://api.wcex.com/trading" path="/transactions/:type" %}
-{% api-method-summary %}
-Get Transactions
-{% endapi-method-summary %}
+#### Response
 
-{% api-method-description %}
+```javascript
+{
+    "BTC": "11.88900211"
+}
+```
+
+### Get Transactions
+
+**`https://api.wcex.com/trading/transactions/:type`**
+
 Lists your deposits and withdrawals, sorted by most recent first.
-{% endapi-method-description %}
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-path-parameters %}
-{% api-method-parameter name="type" type="string" required=false %}
-Can be `deposit` or `withdraw`.
-{% endapi-method-parameter %}
-{% endapi-method-path-parameters %}
+#### Request
 
-{% api-method-query-parameters %}
-{% api-method-parameter name="asset" type="string" required=false %}
-Limits transactions returned to this asset.
-{% endapi-method-parameter %}
+| Path Parameter | Type | Description |
+| :--- | :--- | :--- |
+| type (optional) | `string` | Can be `deposit` or `withdraw`. |
 
-{% api-method-parameter name="limit" type="string" required=false %}
-Number of transactions to return \(max 100\).
-{% endapi-method-parameter %}
+| Query Parameter | Type | Description |
+| :--- | :--- | :--- |
+| asset (optional) | `string` | 
+Limits transactions returned to this asset. |
+| limit (optional) | `string` | 
+Number of transactions to return (max 100). |
+| timestamp (optional) | `string` | 
+Return transactions that occurred before this time. |
 
-{% api-method-parameter name="timestamp" type="string" required=false %}
-Return transactions that occurred before this time.
-{% endapi-method-parameter %}
-{% endapi-method-query-parameters %}
-{% endapi-method-request %}
+Omitting type will return all transactions on your account.
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
+E.g. `/transactions?asset=BTC&limit=50&timestamp=1511481127561`
 
-{% endapi-method-response-example-description %}
+#### Response
 
 ```javascript
 [
@@ -596,88 +396,47 @@ Return transactions that occurred before this time.
         "txid": "8a0a2cd49b3bbcabc5a4066783e3aad47ea745a849450a865977b668ce514ec2",
         "timestamp": 1511482279491,
         "confirmed_at": 1511482379491
-    },
-    {
-        "asset": "ETH",
-        "amount": "200.00990000",
-        "type": "withdraw",
-        "address": "0xa93fae849449d2f9ddca15b861fcb329d39ad47c",
-        "txid": "0xaaec962c014ab72eec8d4abb58326dca1c5c8a9425cd851ef8b9c390f2ad050e",
-        "timestamp": 1511482279491,
-        "confirmed_at": 1511482379491
     }
 ]
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
 
-Omitting type will return all transactions on your account.
+### Get Deposit Address
 
-E.g. `/transactions?asset=BTC&limit=50&timestamp=1511481127561`
+**`https://api.wcex.com/trading/deposit/:asset`**
 
-{% api-method method="get" host="https://api.wcex.com/trading" path="/deposit/:asset" %}
-{% api-method-summary %}
-Get Deposit Address
-{% endapi-method-summary %}
-
-{% api-method-description %}
 Returns a deposit address for the provided asset.
-{% endapi-method-description %}
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-path-parameters %}
-{% api-method-parameter name="asset" type="string" required=true %}
-A valid asset.
-{% endapi-method-parameter %}
-{% endapi-method-path-parameters %}
-{% endapi-method-request %}
+#### Request
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
+| Path Parameter | Type | Description |
+| :--- | :--- | :--- |
+| asset | `string` | A valid asset. |
 
-{% endapi-method-response-example-description %}
+#### Response
 
 ```javascript
 {
     "address": "2MzeJNyp47Cugv85aq361AwBmaC4kxHofuu",
     "asset": "BTC",
-    "confirmations_needed": 2
+    "confirmations_needed": 1
 }
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
 
 ## Public Endpoints
 
-{% api-method method="get" host="https://api.wcex.com/trading" path="/products/:product?" %}
-{% api-method-summary %}
-Get Products
-{% endapi-method-summary %}
+### Get Products
 
-{% api-method-description %}
+**`https://api.wcex.com/trading/products/:product?`**
+
 Lists products available to trade.
-{% endapi-method-description %}
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-path-parameters %}
-{% api-method-parameter name="product" type="string" required=false %}
-Limits results returned to this products.
-{% endapi-method-parameter %}
-{% endapi-method-path-parameters %}
-{% endapi-method-request %}
+#### Request
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
+| Path Parameter | Type | Description |
+| :--- | :--- | :--- |
+| product (optional) | `string` | Limits results returned to this product. |
 
-{% endapi-method-response-example-description %}
+#### Response
 
 ```javascript
 {
@@ -695,34 +454,28 @@ Limits results returned to this products.
     ...
 }
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
 
-{% api-method method="get" host="https://api.wcex.com/trading" path="/quotes/:product\(s\)" %}
-{% api-method-summary %}
-Get Quotes
-{% endapi-method-summary %}
+### Get Quotes
 
-{% api-method-description %}
-Returns quotes for the provided products\(s\).
-{% endapi-method-description %}
+**`https://api.wcex.com/trading/quotes/:product(s)`**
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-path-parameters %}
-{% api-method-parameter name="product\(s\)" type="string" required=true %}
-One or more comma-separated products.
-{% endapi-method-parameter %}
-{% endapi-method-path-parameters %}
-{% endapi-method-request %}
+Returns quotes for the provided product(s).
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
+#### Request
 
-{% endapi-method-response-example-description %}
+| Path Parameter | Type | Description |
+| :--- | :--- | :--- |
+| products | `string` | One or more comma-separated products. |
+
+E.g. `/quotes/EUR-USD,AAPL,SNAP,ETH-USD`
+
+Polling this endpoint is highly discouraged in favor of subscribing to WebSocket events.
+
+E.g. `/book/XT-BTC?limit=50`.
+
+Polling this endpoint is discouraged in favor of subscribing to WebSocket events.
+
+#### Response
 
 ```javascript
 {
@@ -735,64 +488,41 @@ One or more comma-separated products.
         ...
 }
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
 
-E.g. `/quotes/EUR-USD,AAPL,SNAP,ETH-USD`
+### Get Candles
 
-Polling this endpoint is highly discouraged in favor of subscribing to WebSocket events.
+**`https://api.wcex.com/trading/candles/:product/:resolution`**
 
-E.g. `/book/XT-BTC?limit=50`.
-
-Polling this endpoint is discouraged in favor of subscribing to WebSocket events.
-
-{% api-method method="get" host="https://api.wcex.com/trading" path="/candles/:product/:resolution" %}
-{% api-method-summary %}
-Get Candles
-{% endapi-method-summary %}
-
-{% api-method-description %}
 Lists historical candles for a product. Candles returned are grouped by `resolution`.
-{% endapi-method-description %}
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-path-parameters %}
-{% api-method-parameter name="product" type="string" required=true %}
-A valid product.
-{% endapi-method-parameter %}
+#### Request
 
-{% api-method-parameter name="resolution" type="string" required=true %}
-Can be 1, 5, 15, 60, 240, or 1D.
-{% endapi-method-parameter %}
-{% endapi-method-path-parameters %}
+| Path Parameter | Type | Description |
+| :--- | :--- | :--- |
+| product | `string` | A valid product. |
+| resolution | `string` | Can be 1, 5, 15, 60, 240, or 1D. |
 
-{% api-method-query-parameters %}
-{% api-method-parameter name="signal" type="string" required=false %}
-Can be `mid`, `bid`, or `ask`. Defaults to `mid`.
-{% endapi-method-parameter %}
+| Query Parameter | Type | Description |
+| :--- | :--- | :--- |
+| signal (optional) | `string` | Can be `mid`, `bid`, or `ask`. Defaults to `mid`. |
+| start (optional) | `number` | 
+The time after which to fetch candles, in ms. |
+| end (optional) | `number` | 
+The time before which to fetch candles, in ms. |
+| limit (optional) | `string` | 
+Number of candles to return (max 150). |
 
-{% api-method-parameter name="start" type="number" required=false %}
-The time after which to fetch candles, in ms.
-{% endapi-method-parameter %}
+E.g. `/candles/EUR-USD/60?signal=bid&start=1511480127561&end=1511480129513` fetches 1h bid candles on EUR/BTC between the start and end timestamps.
 
-{% api-method-parameter name="end" type="number" required=false %}
-The time before which to fetch candles, in ms.
-{% endapi-method-parameter %}
+#### Response
 
-{% api-method-parameter name="limit" type="number" required=false %}
-Number of candles to return \(max 150\).
-{% endapi-method-parameter %}
-{% endapi-method-query-parameters %}
-{% endapi-method-request %}
+Each item in the array returned represents a candle with granularity `resolution`:
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
-
-{% endapi-method-response-example-description %}
+* **timestamp** \(in seconds\)
+* **open** \(first trade in this interval\)
+* **high** \(highest trade in this interval\)
+* **low** \(lowest trade in this interval\)
+* **close** \(last trade in this interval\)
 
 ```javascript
 [
@@ -819,22 +549,3 @@ Number of candles to return \(max 150\).
     ]
 ]
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
-
-E.g. `/candles/EUR-USD/60?signal=bid&start=1511480127561&end=1511480129513` fetches 1h bid candles on EUR/BTC between the start and end timestamps.
-
-#### Response
-
-Each item in the array returned represents a candle with granularity `resolution`:
-
-* **timestamp** \(in seconds\)
-* **open** \(first trade in this interval\)
-* **high** \(highest trade in this interval\)
-* **low** \(lowest trade in this interval\)
-* **close** \(last trade in this interval\)
-
-If the candle is active, `close` is the last price.
-
