@@ -6,13 +6,11 @@
 
 ## Authenticated Endpoints
 
-{% api-method method="post" host="https://api.wcex.com/exchange" path="/order/new" %}
-
 ### Place a New Order
 
 **`https://api.wcex.com/exchange/order/new`**
 
-#### Request
+#### Request (POST)
 
 | Body Parameter | Type | Description |
 | :--- | :--- | :--- |
@@ -57,7 +55,7 @@ An order accepted by the matching engine will be assigned an order `id` which wi
 
 **`https://api.wcex.com/exchange/order/cancel`**
 
-#### Request
+#### Request (POST)
 
 | Body Parameter | Type | Description |
 | :--- | :--- | :--- |
@@ -78,31 +76,32 @@ If an order could not be cancelled \(if it has been already filled, does not exi
 }
 ```
 
+### Get Orders
 
+**`https://api.wcex.com/exchange/orders`**
 
-{% api-method method="get" host="https://api.wcex.com/exchange" path="/orders" %}
-{% api-method-summary %}
-Get Orders
-{% endapi-method-summary %}
-
-{% api-method-description %}
 Lists your open orders, sorted by submission time \(most recent first\).
-{% endapi-method-description %}
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-query-parameters %}
-{% api-method-parameter name="limit" type="number" required=false %}
-Number of orders to return \(max is 100\).
-{% endapi-method-parameter %}
-{% endapi-method-query-parameters %}
-{% endapi-method-request %}
+#### Request
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
+| Query Parameter | Type | Description |
+| :--- | :--- | :--- |
+| limit (optional) | `number` | Number of orders to return (max is 100). |
 
-{% endapi-method-response-example-description %}
+You can optionally pass a `limit` query parameter to limit the number of orders returned. By default, 100 items are returned.
+
+
+E.g. `/orders?limit=50.`
+
+#### Keeping track of your orders
+
+We recommend listening to streaming WebSocket order events to maintain an up-to-date view of your open orders. It's faster and in many cases more accurate than polling this endpoint, because an order's state may change between the time you make an HTTP request and receive a response.
+
+Polling this endpoint is highly discouraged.
+
+#### Response
+
+An array of your open orders.
 
 ```javascript
 [
@@ -128,58 +127,37 @@ Number of orders to return \(max is 100\).
     }
 ]
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
 
-You can optionally pass a `limit` query parameter to limit the number of orders returned. By default, 100 items are returned.
+### Get Fills
 
-E.g. `/orders?limit=50`.
+**`https://api.wcex.com/exchange/fills/:product?`**
 
-### Keeping track of your orders
+List your recent fills, ordered by fill time (most recent first).
 
-We recommend listening to streaming WebSocket order events to maintain an up-to-date view of your open orders. It's faster and in many cases more accurate than polling this endpoint, because an order's state may change between the time you make an HTTP request and receive a response.
+#### Request
+
+| Path Parameter | Type | Description |
+| :--- | :--- | :--- |
+| product (optional) | `string` | Limit fills returned to this product. |
+
+| Query Parameter | Type | Description |
+| :--- | :--- | :--- |
+| timestamp (optional) | `number` | Return fills that occurred before this time. |
+| limit (optional) | `number` | Number of fills to return (max is 100). |
+
+Omitting `product` will return fills across all products.
+
+E.g. `/fills?limit=50&timestamp=1511481127561`
+
+#### Keeping track of your fills
+
+We recommend listening to streaming WebSocket match events to maintain an up-to-date view of your fills. It's faster and more accurate than polling this endpoint.
 
 Polling this endpoint is highly discouraged.
 
-### Response
+#### Response
 
-An array of your open orders.
-
-{% api-method method="get" host="https://api.wcex.com/exchange" path="/fills/:product?" %}
-{% api-method-summary %}
-Get Fills
-{% endapi-method-summary %}
-
-{% api-method-description %}
-List your recent fills, ordered by fill time \(most recent first\).
-{% endapi-method-description %}
-
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-path-parameters %}
-{% api-method-parameter name="product" type="string" required=false %}
-Limit fills returned to this product.
-{% endapi-method-parameter %}
-{% endapi-method-path-parameters %}
-
-{% api-method-query-parameters %}
-{% api-method-parameter name="timestamp" type="number" required=false %}
-Return fills that occurred before this time.
-{% endapi-method-parameter %}
-
-{% api-method-parameter name="limit" type="number" required=false %}
-Number of fills to return \(max is 100\).
-{% endapi-method-parameter %}
-{% endapi-method-query-parameters %}
-{% endapi-method-request %}
-
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
-
-{% endapi-method-response-example-description %}
+An array of your recent fills.
 
 ```javascript
 [
@@ -203,48 +181,22 @@ Number of fills to return \(max is 100\).
     }
 ]
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
 
-Omitting `product` will return fills across all products.
+### Get Balances
 
-E.g. `/fills?limit=50&timestamp=1511481127561`
+**`https://api.wcex.com/exchange/balances/:asset?`**
 
-### Keeping track of your fills
-
-We recommend listening to streaming WebSocket match events to maintain an up-to-date view of your fills. It's faster and more accurate than polling this endpoint.
-
-Polling this endpoint is highly discouraged.
-
-### Response
-
-An array of your recent fills.
-
-{% api-method method="get" host="https://api.wcex.com/exchange" path="/balances/:asset?" %}
-{% api-method-summary %}
-Get Balances
-{% endapi-method-summary %}
-
-{% api-method-description %}
 Lists your balances.
-{% endapi-method-description %}
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-path-parameters %}
-{% api-method-parameter name="asset" type="string" required=false %}
-Limits balances returned to this asset.
-{% endapi-method-parameter %}
-{% endapi-method-path-parameters %}
-{% endapi-method-request %}
+#### Request
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
+| Path Parameter | Type | Description |
+| :--- | :--- | :--- |
+| asset (optional) | `string` | Limits balances returned to this asset. |
 
-{% endapi-method-response-example-description %}
+Omitting `asset` will return all balances on your account. Only non-zero balances, or assets for which you have made at least one deposit will be returned.
+
+#### Response
 
 ```javascript
 {
@@ -252,50 +204,31 @@ Limits balances returned to this asset.
     "XT": "2218.99900000"
 }
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
 
-Omitting `asset` will return all balances on your account. Only non-zero balances, or assets for which you have made at least one deposit will be returned.
+### Get Transactions
 
-{% api-method method="get" host="https://api.wcex.com/exchange" path="/transactions/:type" %}
-{% api-method-summary %}
-Get Transactions
-{% endapi-method-summary %}
+**`https://api.wcex.com/exchange/transactions/:type`**
 
-{% api-method-description %}
 Lists your deposits and withdrawals, sorted by most recent first.
-{% endapi-method-description %}
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-path-parameters %}
-{% api-method-parameter name="type" type="string" required=false %}
-Can be `deposit` or `withdraw`.
-{% endapi-method-parameter %}
-{% endapi-method-path-parameters %}
+#### Request
 
-{% api-method-query-parameters %}
-{% api-method-parameter name="asset" type="string" required=false %}
-Limits transactions returned to this asset.
-{% endapi-method-parameter %}
+| Path Parameter | Type | Description |
+| :--- | :--- | :--- |
+| type (optional) | `string` | Can be `deposit` or `withdraw`. |
 
-{% api-method-parameter name="limit" type="string" required=false %}
-Number of transactions to return \(max 100\).
-{% endapi-method-parameter %}
+| Query Parameter | Type | Description |
+| :--- | :--- | :--- |
+| asset (optional) | `string` | Limits transactions returned to this asset. |
+| limit (optional) | `string` | Number of transactions to return (max 100). |
+| timestamp (optional) | `string` | Return transactions that occurred before this time. |
 
-{% api-method-parameter name="timestamp" type="string" required=false %}
-Return transactions that occurred before this time.
-{% endapi-method-parameter %}
-{% endapi-method-query-parameters %}
-{% endapi-method-request %}
+Omitting `type` will return all transactions on your account.
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
 
-{% endapi-method-response-example-description %}
+E.g. `/transactions?asset=XT&limit=50&timestamp=1511481127561`
+
+#### Response
 
 ```javascript
 [
@@ -319,38 +252,20 @@ Return transactions that occurred before this time.
     }
 ]
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
 
-Omitting type will return all transactions on your account.
+### Get Deposit Address
 
-E.g. `/transactions?asset=XT&limit=50&timestamp=1511481127561`
+**`https://api.wcex.com/exchange/deposit/:asset`**
 
-{% api-method method="get" host="https://api.wcex.com/exchange" path="/deposit/:asset" %}
-{% api-method-summary %}
-Get Deposit Address
-{% endapi-method-summary %}
-
-{% api-method-description %}
 Returns a deposit address for the provided asset.
-{% endapi-method-description %}
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-path-parameters %}
-{% api-method-parameter name="asset" type="string" required=true %}
-A valid asset.
-{% endapi-method-parameter %}
-{% endapi-method-path-parameters %}
-{% endapi-method-request %}
+#### Request
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
+| Path Parameter | Type | Description |
+| :--- | :--- | :--- |
+| asset | `string` | A valid asset. |
 
-{% endapi-method-response-example-description %}
+#### Response
 
 ```javascript
 {
@@ -359,36 +274,24 @@ A valid asset.
     "confirmations_needed": 2
 }
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
+
 
 ## Public Endpoints
 
-{% api-method method="get" host="https://api.wcex.com/exchange" path="/products/:product?" %}
-{% api-method-summary %}
-Get Products
-{% endapi-method-summary %}
 
-{% api-method-description %}
+### Get Products
+
+**`https://api.wcex.com/exchange/products/:product?`**
+
 Lists products available to trade.
-{% endapi-method-description %}
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-path-parameters %}
-{% api-method-parameter name="product" type="string" required=false %}
-Limits results returned to this products.
-{% endapi-method-parameter %}
-{% endapi-method-path-parameters %}
-{% endapi-method-request %}
+#### Request
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
+| Path Parameter | Type | Description |
+| :--- | :--- | :--- |
+| product (optional) | `string` | Limits results returned to this product. |
 
-{% endapi-method-response-example-description %}
+#### Response
 
 ```javascript
 [
@@ -400,34 +303,24 @@ Limits results returned to this products.
     ]
 ]
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
 
-{% api-method method="get" host="https://api.wcex.com/exchange" path="/quotes/:product\(s\)" %}
-{% api-method-summary %}
-Get Quotes
-{% endapi-method-summary %}
+### Get Quotes
 
-{% api-method-description %}
-Returns quotes for the provided products\(s\).
-{% endapi-method-description %}
+**`https://api.wcex.com/exchange/quotes/:product(s)?`**
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-path-parameters %}
-{% api-method-parameter name="product\(s\)" type="string" required=true %}
-One or more comma-separated products.
-{% endapi-method-parameter %}
-{% endapi-method-path-parameters %}
-{% endapi-method-request %}
+Lists products available to trade.
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
+#### Request
 
-{% endapi-method-response-example-description %}
+| Path Parameter | Type | Description |
+| :--- | :--- | :--- |
+| product(s) | `string` | One or more comma-separated products. |
+
+E.g. `/quotes/XT-BTC,XT-ETH`
+
+Polling this endpoint is highly discouraged in favor of subscribing to WebSocket events.
+
+#### Response
 
 ```javascript
 {
@@ -440,44 +333,28 @@ One or more comma-separated products.
         ]
 }
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
 
-E.g. `/quotes/XT-BTC,XT-ETH`
+### Get Book
 
-Polling this endpoint is highly discouraged in favor of subscribing to WebSocket events.
+**`https://api.wcex.com/exchange/book/:product`**
 
-{% api-method method="get" host="https://api.wcex.com/exchange" path="/book/:product" %}
-{% api-method-summary %}
-Get Book
-{% endapi-method-summary %}
-
-{% api-method-description %}
 Returns list of open bids and asks for a product.
-{% endapi-method-description %}
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-path-parameters %}
-{% api-method-parameter name="product" type="string" required=true %}
-A valid product.
-{% endapi-method-parameter %}
-{% endapi-method-path-parameters %}
+#### Request
 
-{% api-method-query-parameters %}
-{% api-method-parameter name="limit" type="string" required=false %}
-Number of levels to return \(max 100\).
-{% endapi-method-parameter %}
-{% endapi-method-query-parameters %}
-{% endapi-method-request %}
+| Path Parameter | Type | Description |
+| :--- | :--- | :--- |
+| product | `string` | A valid product. |
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
+| Query Parameter | Type | Description |
+| :--- | :--- | :--- |
+| limit (optional) | `string` | Number of levels to return (max 100). |
 
-{% endapi-method-response-example-description %}
+E.g. `/book/XT-BTC?limit=50`.
+
+Polling this endpoint is discouraged in favor of subscribing to WebSocket events.
+
+#### Response
 
 ```javascript
 {
@@ -491,15 +368,6 @@ Number of levels to return \(max 100\).
     ]
 }
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
-
-E.g. `/book/XT-BTC?limit=50`.
-
-Polling this endpoint is discouraged in favor of subscribing to WebSocket events.
-
 {% api-method method="get" host="https://api.wcex.com/exchange" path="/trades/:product" %}
 {% api-method-summary %}
 Get Trade History
