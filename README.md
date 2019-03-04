@@ -62,9 +62,7 @@ Returns the server time.
 
 #### Request
 
-**Query Parameters**
-
-| Parameter | Type | Description |
+| Query Parameter | Type | Description |
 | :--- | :--- | :--- |
 | client\_time (optional) | `number` | Send client\_time \(in ms since Epoch\) to include the time drift between your client and our server in the response. |
 
