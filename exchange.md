@@ -2,49 +2,43 @@
 
 **Endpoint URL**
 
-`https://api.wcex.com/exchange`
+**`https://api.wcex.com/exchange`**
 
 ## Authenticated Endpoints
 
 {% api-method method="post" host="https://api.wcex.com/exchange" path="/order/new" %}
-{% api-method-summary %}
-Place a New Order
-{% endapi-method-summary %}
 
-{% api-method-description %}
+### Place a New Order
 
-{% endapi-method-description %}
+**`https://api.wcex.com/exchange/order/new`**
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-body-parameters %}
-{% api-method-parameter name="product" type="string" required=true %}
-A valid product.
-{% endapi-method-parameter %}
+#### Request
 
-{% api-method-parameter name="side" type="string" required=true %}
-Can be `buy` or `sell.`
-{% endapi-method-parameter %}
+| Body Parameter | Type | Description |
+| :--- | :--- | :--- |
+| product | `string` | A valid product. |
+| side | `string` | Can be `buy` or `sell`. |
+| type | `string` | Must be `limit`. |
+| size | `string` | Amount to buy or sell. |
+| price | `string` | Price of your order. |
 
-{% api-method-parameter name="type" type="string" required=true %}
-Must be `limit`.
-{% endapi-method-parameter %}
+Currently, only limit orders are supported. To have your order execute immediately (as a market order), simply set a price deep in the opposite book.
 
-{% api-method-parameter name="size" type="string" required=true %}
-Amount to buy or sell.
-{% endapi-method-parameter %}
+#### Order Lifecycle
 
-{% api-method-parameter name="price" type="string" required=true %}
-Price of your order.
-{% endapi-method-parameter %}
-{% endapi-method-body-parameters %}
-{% endapi-method-request %}
+Your account must have sufficient balance to successfully submit an order.
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
-Order successfully submitted.
-{% endapi-method-response-example-description %}
+If any part of the order results in adding liquidity to the book, it will be marked as open.
+
+An order that is completely filled and off the book will be marked as done.
+
+#### Response
+
+An order accepted by the matching engine will be assigned an order `id` which will appear in the response.
+
+`filled` specifies the amount that was matched as a result of your order.
+
+`timestamp` is the time your order was received by the matching engine.
 
 ```javascript
 {
@@ -58,74 +52,33 @@ Order successfully submitted.
     "timestamp": 1511467005839
 }
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
 
-Currently, only limit orders are supported. To have your order execute immediately \(as a market order\), simply set a price deep in the opposite book.
+### Cancel Order
 
-### Order Lifecycle
+**`https://api.wcex.com/exchange/order/cancel`**
 
-Your account must have sufficient balance to successfully submit an order.
+#### Request
 
-If any part of the order results in adding liquidity to the book, it will be marked as **open**.
+| Body Parameter | Type | Description |
+| :--- | :--- | :--- |
+| id | `string` | The ID of the order to cancel. |
+| product (optional) | `string` | The order's product. |
 
-An order that is completely filled and off the book will be marked as **done**.
+Providing `product` is optional, but it's recommended because it greatly speeds up the cancel operation by skipping the id-to-product lookup.
 
-### Response
+#### Response
 
-An order accepted by the matching engine will be assigned an order `id`which will appear in the response.
+If successful, the response will contain the ID of the cancelled order.
 
-`filled` specifies the amount that was matched as a result of your order.
-
-`timestamp` is the time your order was received by the matching engine.
-
-{% api-method method="post" host="https://api.wcex.com/exchange" path="/order/cancel" %}
-{% api-method-summary %}
-Cancel Order
-{% endapi-method-summary %}
-
-{% api-method-description %}
-
-{% endapi-method-description %}
-
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-body-parameters %}
-{% api-method-parameter name="id" type="string" required=true %}
-The ID of the order to cancel.
-{% endapi-method-parameter %}
-
-{% api-method-parameter name="product" type="string" required=false %}
-The order's product.
-{% endapi-method-parameter %}
-{% endapi-method-body-parameters %}
-{% endapi-method-request %}
-
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
-
-{% endapi-method-response-example-description %}
+If an order could not be cancelled \(if it has been already filled, does not exist, etc.\), an error is returned.
 
 ```javascript
 {
     "id": "9d335cce-d581-45f6-8efc-bdab3d61c6e2"
 }
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
 
-Providing `product` is optional, but it's recommended because it greatly speeds up the cancel operation by skipping the id-to-product lookup.
 
-### Response
-
-If successful, the response will contain the ID of the cancelled order.
-
-If an order could not be cancelled \(if it has been already filled, does not exist, etc.\), an error is returned.
 
 {% api-method method="get" host="https://api.wcex.com/exchange" path="/orders" %}
 {% api-method-summary %}
