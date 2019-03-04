@@ -368,39 +368,33 @@ Polling this endpoint is discouraged in favor of subscribing to WebSocket events
     ]
 }
 ```
-{% api-method method="get" host="https://api.wcex.com/exchange" path="/trades/:product" %}
-{% api-method-summary %}
-Get Trade History
-{% endapi-method-summary %}
 
-{% api-method-description %}
+
+### Get Trade History
+
+**`https://api.wcex.com/exchange/trades/:product`**
+
 Lists the latest trades for the provided product.
-{% endapi-method-description %}
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-path-parameters %}
-{% api-method-parameter name="product" type="string" required=true %}
-A valid product.
-{% endapi-method-parameter %}
-{% endapi-method-path-parameters %}
+#### Request
 
-{% api-method-query-parameters %}
-{% api-method-parameter name="timestamp" type="number" required=false %}
-Return trades that occurred before this time,
-{% endapi-method-parameter %}
+| Path Parameter | Type | Description |
+| :--- | :--- | :--- |
+| product | `string` | A valid product. |
 
-{% api-method-parameter name="limit" type="string" required=false %}
-Number of trades to return \(max 100\).
-{% endapi-method-parameter %}
-{% endapi-method-query-parameters %}
-{% endapi-method-request %}
+| Query Parameter | Type | Description |
+| :--- | :--- | :--- |
+| timestamp (optional) | `number` | 
+Return trades that occurred before this time. |
+| limit (optional) | `string` | Number of trades to return (max 100). |
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
+E.g. `/trades/XT-BTC?limit=50&timestamp=1511481127561`.
 
-{% endapi-method-response-example-description %}
+Polling this endpoint is discouraged in favor of subscribing to WebSocket events.
+
+#### Response
+
+`side` indicates the taker order side. A `buy` indicates an up-tick and a `sell` indicates a down-tick.
 
 ```javascript
 [
@@ -424,60 +418,44 @@ Number of trades to return \(max 100\).
     }
 ]
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
 
-E.g. `/trades/XT-BTC?limit=50&timestamp=1511481127561`.
 
-Polling this endpoint is discouraged in favor of subscribing to WebSocket events.
+### Get Candles
 
-### Response
+**`https://api.wcex.com/exchange/candles/:product/:resolution`**
 
-`side` indicates the taker order side. A `buy` indicates an up-tick and a `sell` indicates a down-tick.
-
-{% api-method method="get" host="https://api.wcex.com/exchange" path="/candles/:product/:resolution" %}
-{% api-method-summary %}
-Get Candles
-{% endapi-method-summary %}
-
-{% api-method-description %}
 Lists historical candles for a product. Candles returned are grouped by `resolution`.
-{% endapi-method-description %}
 
-{% api-method-spec %}
-{% api-method-request %}
-{% api-method-path-parameters %}
-{% api-method-parameter name="product" type="string" required=true %}
-A valid product.
-{% endapi-method-parameter %}
+#### Request
 
-{% api-method-parameter name="resolution" type="string" required=true %}
-Can be 1, 5, 15, 60, 240, or 1D.
-{% endapi-method-parameter %}
-{% endapi-method-path-parameters %}
+| Path Parameter | Type | Description |
+| :--- | :--- | :--- |
+| product | `string` | A valid product. |
+| resolution | `string` | Can be 1, 5, 15, 60, 240, or 1D. |
 
-{% api-method-query-parameters %}
-{% api-method-parameter name="start" type="number" required=false %}
-The time after which to fetch candles, in ms.
-{% endapi-method-parameter %}
+| Query Parameter | Type | Description |
+| :--- | :--- | :--- |
+| start (optional) | `number` | 
+The time after which to fetch candles, in ms. |
+| end (optional) | `number` | 
+The time before which to fetch candles, in ms. |
+| limit (optional) | `string` | 
+Number of candles to return (max 150). |
 
-{% api-method-parameter name="end" type="number" required=false %}
-The time before which to fetch candles, in ms.
-{% endapi-method-parameter %}
+E.g. `/candles/XT-BTC/60?start=1511480127561&end=1511480129513` fetches 1h candles on XT/BTC between the start and end timestamps.
 
-{% api-method-parameter name="limit" type="number" required=false %}
-Number of candles to return \(max 150\).
-{% endapi-method-parameter %}
-{% endapi-method-query-parameters %}
-{% endapi-method-request %}
+#### Response
 
-{% api-method-response %}
-{% api-method-response-example httpCode=200 %}
-{% api-method-response-example-description %}
+Each item in the array returned represents a candle with granularity `resolution`:
 
-{% endapi-method-response-example-description %}
+* **timestamp** \(in seconds\)
+* **open** \(first trade in this interval\)
+* **high** \(highest trade in this interval\)
+* **low** \(lowest trade in this interval\)
+* **close** \(last trade in this interval\)
+* **volume** \(volume of trading during this interval\)
+
+`volume` is returned as string to preserve float number precision. If the candle is active, `close` is the last price.
 
 ```javascript
 [
@@ -507,23 +485,3 @@ Number of candles to return \(max 150\).
     ]
 ]
 ```
-{% endapi-method-response-example %}
-{% endapi-method-response %}
-{% endapi-method-spec %}
-{% endapi-method %}
-
-E.g. `/candles/XT-BTC/60?start=1511480127561&end=1511480129513` fetches 1h candles on XT/BTC between the start and end timestamps.
-
-### Response
-
-Each item in the array returned represents a candle with granularity `resolution`:
-
-* **timestamp** \(in seconds\)
-* **open** \(first trade in this interval\)
-* **high** \(highest trade in this interval\)
-* **low** \(lowest trade in this interval\)
-* **close** \(last trade in this interval\)
-* **volume** \(volume of trading during this interval\)
-
-`volume` is returned as string to preserve float number precision. If the candle is active, `close` is the last price.
-
