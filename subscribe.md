@@ -78,164 +78,7 @@ WCX will send a `heartbeat` event every five seconds so you'll know your WebSock
 
 If you miss one or more heartbeats, or your sequence numbers contain gaps, your connection may be unreliable. We recommend that you disconnect and reconnect.
 
-### Exchange
-
-#### Public
-
-**`exchange:book:[product]`**
-
-A `book` event provides real-time order book updates. It contains an `updates` array that contains arrays representing price level deltas.
-
-Each delta array contains:
-
-* price
-* size
-* order count at this level. '0' means the price level was removed
-* bid \(0\) or ask \(1\)
-
-This event is batched and sent every 500 milliseconds at most.
-
-```javascript
-{
-    "event": "book",
-    "sequence": 991,
-    "product": "XT-BTC",
-    "updates": [
-        ["0.04771", "1.44543", 1, 0],
-        ["0.05892", "2.99112", 2, 1],
-    ]
-}
-```
-
-**`exchange:trades:[product]`**
-
-A `trade` event indicates that a trade occurred on the market. `side`represents the taker side: a `buy` side match is an up-tick and a `sell` side match is a down-tick.
-
-```javascript
-{
-    "event": "trade",
-    "sequence": 439,
-    "product": "XT-BTC",
-    "order_id_taker": "7ec97c53-75b2-4e9b-bdfa-6eca818f8c8d",
-    "order_id_maker": "5d818156-fc9a-4bfe-b0e3-1ef3f3f5d799",
-    "size": "11.774650",
-    "price": "0.04771",
-    "side": "buy",
-    "timestamp": 151143461939
-}
-```
-
-**`exchange:quotes:[product]`**
-
-The `quote` event provides real-time price updates.
-
-```javascript
-{
-    "event": "quote",
-    "sequence": 889,
-    "data": [
-        "XT-BTC", // product
-        "0.0454", // last price
-        "buy", // last tick
-        "888377.1283",  // 24h volume
-        "0.0355", // price 24h ago
-        151143431932 // timestamp
-    ]
-}
-```
-
-#### Authenticated
-
-**`exchange:orders`**
-
-When subscribed to this channel, you can receive `open`, `match`, `cancel`, and `done` events.
-
-An **`open`** event means that your order is now visible on the book with a non-zero amount. Open orders remain on the book until they are filled or cancelled.
-
-```javascript
-{
-    "event": "open",
-    "sequence": 44,
-    "data": {
-        "id": "bf2b704c-010a-48ca-93fb-d0193f24420a",
-        "product": "XT-BTC",
-        "size": "0.77942322",
-        "filled": "0.2451223",
-        "price": "0.05132",
-        "side": "buy",
-        "type": "limit",
-        "timestamp": 1511482279492
-    }
-}
-```
-
-A **`match`** event indicates that a trade occurred concerning one of your orders. `side` represents the taker side: a `buy` side match is an up-tick and a `sell` side match is a down-tick.
-
-```javascript
-{
-    "event": "match",
-    "sequence": 66,
-    "data": {
-        "product": "XT-BTC",
-        "order_id_taker": "7ec97c53-75b2-4e9b-bdfa-6eca818f8c8d",
-        "order_id_maker": "5d818156-fc9a-4bfe-b0e3-1ef3f3f5d799",
-        "size": "11.774650",
-        "price": "0.04771",
-        "side": "buy",
-        "timestamp": 1511434619393
-    }
-}
-```
-
-A **`cancel`** event indicates that your cancel request has been processed by the matching engine.
-
-```javascript
-{
-    "event": "cancel",
-    "sequence": 812,
-    "data": {
-       "id": "31bf3a89-2a0a-40b0-9327-ec0a5cc3ce3c",
-        "product": "XT-BTC",
-        "size": "1.22393981",
-        "price": "0.03131",
-        "side": "buy",
-        "type": "limit",
-        "timestamp": 1511434617391
-    }
-}
-```
-
-A **`done`** event indicates that your order has been fully filled and is no longer visible on the book.
-
-```javascript
-{
-    "event": "done",
-    "sequence": 91,
-    "data": {
-        "id": "bf2b704c-010a-48ca-93fb-d0193f24420a",
-        "product": "XT-BTC",
-        "price": "0.05132",
-        "side": "buy",
-        "timestamp": 1511434699393
-    }
-}
-```
-
-**`exchange:balances`**
-
-A `balance` event is sent whenever one or more of your balances changes. If the event received contains a `diff` field, the value is an increment or decrement, not the new balance.
-
-```javascript
-{
-    "event": "balance",
-    "sequence": 22,
-    "data": {
-        "XT": "3445.66760000"
-    }
-}
-```
-
-### Margin Trading
+### Trading
 
 #### Public
 
@@ -254,6 +97,24 @@ The `quote` event provides real-time price updates.
         "1.12445", // ask price
         151143431932 // timestamp
     ]
+}
+```
+
+**`trading:candles:[product]:[resolution]`**
+
+The `candle` event provides real-time candle updates.
+
+```javascript
+{
+    "event": "candle",
+    "resolution": "1",
+    "product": "BTC-USD",
+    "data": {
+      "t": "1553623740", // timestamp in seconds
+      "m": ["3916.6","3916.6","3916.5","3916.5"], // mid OHLC
+      "b": ["3916.3","3916.3","3916.2","3916.2"], // bid OHLC
+      "a": ["3917.0","3917.0","3916.8","3916.8"] // ask OHLC
+    }
 }
 ```
 
@@ -458,5 +319,160 @@ A `balance` event is sent whenever one or more of your balances changes.
 }
 ```
 
+### Exchange
 
+#### Public
+
+**`exchange:book:[product]`**
+
+A `book` event provides real-time order book updates. It contains an `updates` array that contains arrays representing price level deltas.
+
+Each delta array contains:
+
+* price
+* size
+* order count at this level. '0' means the price level was removed
+* bid \(0\) or ask \(1\)
+
+This event is batched and sent every 500 milliseconds at most.
+
+```javascript
+{
+    "event": "book",
+    "sequence": 991,
+    "product": "XT-BTC",
+    "updates": [
+        ["0.04771", "1.44543", 1, 0],
+        ["0.05892", "2.99112", 2, 1],
+    ]
+}
+```
+
+**`exchange:trades:[product]`**
+
+A `trade` event indicates that a trade occurred on the market. `side`represents the taker side: a `buy` side match is an up-tick and a `sell` side match is a down-tick.
+
+```javascript
+{
+    "event": "trade",
+    "sequence": 439,
+    "product": "XT-BTC",
+    "order_id_taker": "7ec97c53-75b2-4e9b-bdfa-6eca818f8c8d",
+    "order_id_maker": "5d818156-fc9a-4bfe-b0e3-1ef3f3f5d799",
+    "size": "11.774650",
+    "price": "0.04771",
+    "side": "buy",
+    "timestamp": 151143461939
+}
+```
+
+**`exchange:quotes:[product]`**
+
+The `quote` event provides real-time price updates.
+
+```javascript
+{
+    "event": "quote",
+    "sequence": 889,
+    "data": [
+        "XT-BTC", // product
+        "0.0454", // last price
+        "buy", // last tick
+        "888377.1283",  // 24h volume
+        "0.0355", // price 24h ago
+        151143431932 // timestamp
+    ]
+}
+```
+
+#### Authenticated
+
+**`exchange:orders`**
+
+When subscribed to this channel, you can receive `open`, `match`, `cancel`, and `done` events.
+
+An **`open`** event means that your order is now visible on the book with a non-zero amount. Open orders remain on the book until they are filled or cancelled.
+
+```javascript
+{
+    "event": "open",
+    "sequence": 44,
+    "data": {
+        "id": "bf2b704c-010a-48ca-93fb-d0193f24420a",
+        "product": "XT-BTC",
+        "size": "0.77942322",
+        "filled": "0.2451223",
+        "price": "0.05132",
+        "side": "buy",
+        "type": "limit",
+        "timestamp": 1511482279492
+    }
+}
+```
+
+A **`match`** event indicates that a trade occurred concerning one of your orders. `side` represents the taker side: a `buy` side match is an up-tick and a `sell` side match is a down-tick.
+
+```javascript
+{
+    "event": "match",
+    "sequence": 66,
+    "data": {
+        "product": "XT-BTC",
+        "order_id_taker": "7ec97c53-75b2-4e9b-bdfa-6eca818f8c8d",
+        "order_id_maker": "5d818156-fc9a-4bfe-b0e3-1ef3f3f5d799",
+        "size": "11.774650",
+        "price": "0.04771",
+        "side": "buy",
+        "timestamp": 1511434619393
+    }
+}
+```
+
+A **`cancel`** event indicates that your cancel request has been processed by the matching engine.
+
+```javascript
+{
+    "event": "cancel",
+    "sequence": 812,
+    "data": {
+       "id": "31bf3a89-2a0a-40b0-9327-ec0a5cc3ce3c",
+        "product": "XT-BTC",
+        "size": "1.22393981",
+        "price": "0.03131",
+        "side": "buy",
+        "type": "limit",
+        "timestamp": 1511434617391
+    }
+}
+```
+
+A **`done`** event indicates that your order has been fully filled and is no longer visible on the book.
+
+```javascript
+{
+    "event": "done",
+    "sequence": 91,
+    "data": {
+        "id": "bf2b704c-010a-48ca-93fb-d0193f24420a",
+        "product": "XT-BTC",
+        "price": "0.05132",
+        "side": "buy",
+        "timestamp": 1511434699393
+    }
+}
+```
+
+**`exchange:balances`**
+
+A `balance` event is sent whenever one or more of your balances changes. If the event received contains a `diff` field, the value is an increment or decrement, not the new balance.
+
+```javascript
+{
+    "event": "balance",
+    "sequence": 22,
+    "data": {
+        "XT": "3445.66760000"
+    }
+}
+```
 
