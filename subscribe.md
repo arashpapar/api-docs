@@ -95,6 +95,7 @@ The `quote` event provides real-time price updates.
         "1.12442", // mid price
         "1.12439", // bid price
         "1.12445", // ask price
+        "1.12411", // mid price 24 hours ago
         151143431932 // timestamp
     ]
 }
