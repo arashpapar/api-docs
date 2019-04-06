@@ -502,11 +502,11 @@ Lists historical candles for a product. Candles returned are grouped by `resolut
 | Query Parameter | Type | Description |
 | :--- | :--- | :--- |
 | signal (optional) | `string` | Can be `mid`, `bid`, or `ask`. Defaults to `mid`. |
-| start (optional) | `number` | The time after which to fetch candles, in ms. |
-| end (optional) | `number` | The time before which to fetch candles, in ms. |
+| start (optional) | `number` | The time after which to fetch candles, in seconds. |
+| end (optional) | `number` | The time before which to fetch candles, in seconds. |
 | limit (optional) | `string` | Number of candles to return (max 150). |
 
-E.g. `/candles/EUR-USD/60?signal=bid&start=1511480127561&end=1511480129513` fetches 1h bid candles on EUR/BTC between the start and end timestamps.
+E.g. `/candles/EUR-USD/60?signal=bid&start=1511480127&end=1511480129` fetches 1h bid candles on EUR/BTC between the start and end timestamps.
 
 #### Response
 
