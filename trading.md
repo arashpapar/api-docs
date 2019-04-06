@@ -373,12 +373,9 @@ Lists your deposits and withdrawals, sorted by most recent first.
 
 | Query Parameter | Type | Description |
 | :--- | :--- | :--- |
-| asset (optional) | `string` | 
-Limits transactions returned to this asset. |
-| limit (optional) | `string` | 
-Number of transactions to return (max 100). |
-| timestamp (optional) | `string` | 
-Return transactions that occurred before this time. |
+| asset (optional) | `string` | Limits transactions returned to this asset. |
+| limit (optional) | `string` | Number of transactions to return (max 100). |
+| timestamp (optional) | `string` | Return transactions that occurred before this time. |
 
 Omitting type will return all transactions on your account.
 
@@ -505,12 +502,9 @@ Lists historical candles for a product. Candles returned are grouped by `resolut
 | Query Parameter | Type | Description |
 | :--- | :--- | :--- |
 | signal (optional) | `string` | Can be `mid`, `bid`, or `ask`. Defaults to `mid`. |
-| start (optional) | `number` | 
-The time after which to fetch candles, in ms. |
-| end (optional) | `number` | 
-The time before which to fetch candles, in ms. |
-| limit (optional) | `string` | 
-Number of candles to return (max 150). |
+| start (optional) | `number` | The time after which to fetch candles, in ms. |
+| end (optional) | `number` | The time before which to fetch candles, in ms. |
+| limit (optional) | `string` | Number of candles to return (max 150). |
 
 E.g. `/candles/EUR-USD/60?signal=bid&start=1511480127561&end=1511480129513` fetches 1h bid candles on EUR/BTC between the start and end timestamps.
 
