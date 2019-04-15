@@ -4,6 +4,8 @@
 
 **`https://api.wcex.com/exchange`**
 
+**Important Note: this document covers API endpoints for our [XT Exchange](https://exchange.wcex.com), not for our main derivatives trading platform. If you're looking for those, please see [here](trading.md).**
+
 ## Authenticated Endpoints
 
 ### Place a New Order
