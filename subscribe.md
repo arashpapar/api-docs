@@ -12,8 +12,6 @@ To receive WebSocket events, you must first send a `subscribe` message with the 
 {
   "type": "subscribe",
   "channels": [
-    "exchange:quotes:XT-BTC",
-    "exchange:book:XT-BTC",
     "trading:quotes:AAPL",
     "trading:quotes:EUR-USD"
   ]
@@ -59,8 +57,8 @@ Authentication is similar to REST request signing and authentication. Pass in an
   "type": "subscribe",
   "channels": [
     "trading:quotes:EUR-USD",
+    "trading:quotes:BTC-USD",
     "trading:positions",
-    "exchange:orders"
   ],
   "auth": {
     "key": "8b6bcdc6-5ef8-463b-833f-3681dc2c90d3",
@@ -78,9 +76,9 @@ WCX will send a `heartbeat` event every five seconds so you'll know your WebSock
 
 If you miss one or more heartbeats, or your sequence numbers contain gaps, your connection may be unreliable. We recommend that you disconnect and reconnect.
 
-### Trading
+## Trading
 
-#### Public
+### Public
 
 **`trading:quotes:[product]`**
 
@@ -119,7 +117,7 @@ The `candle` event provides real-time candle updates.
 }
 ```
 
-#### Authenticated
+### Authenticated
 
 For demo trading, channels and events have a `_demo` suffix. E.g. `trading:orders_demo`, `order_demo:new`, `position_demo:close`, `trading:balances_demo`, etc.
 
@@ -320,9 +318,11 @@ A `balance` event is sent whenever one or more of your balances changes.
 }
 ```
 
-### Exchange
+## XT Exchange
 
-#### Public
+**Important Note: the channels below cover our [XT Exchange](https://exchange.wcex.com), not our main trading platform. If you're looking for those, please see the Trading section above.**
+
+### Public
 
 **`exchange:book:[product]`**
 
@@ -386,7 +386,7 @@ The `quote` event provides real-time price updates.
 }
 ```
 
-#### Authenticated
+### Authenticated
 
 **`exchange:orders`**
 
