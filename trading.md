@@ -20,12 +20,9 @@
 | leverage | `number` | Leverage to use. |
 | amount | `integer` | Amount in contracts (1 contract = 0.001 BTC). |
 | base_currency | `string` | Must be `BTC`. |
-| price (optional) | `string` | 
-Required only if type is pending. |
-| take_profit (optional) | `string` | 
-The trade's take-profit price. |
-| stop_loss (optional) | `string` | 
-The trade's stop-loss price. |
+| price (optional) | `string` | Required only if type is pending. |
+| take_profit (optional) | `string` | The trade's take-profit price. |
+| stop_loss (optional) | `string` | The trade's stop-loss price. |
 
 A trade with type `market` will result in an open position.
 
