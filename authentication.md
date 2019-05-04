@@ -29,24 +29,26 @@ Generate a SHA-256 HMAC of this string using your API secret, then Base64-encode
 import crypto from 'crypto'
 import request from 'request'
 
-// Sending a New Order request
+// Sending a New Trade request
 
 const API_SECRET = "6a0ef...";
 
 const TIMESTAMP = Date.now();
 
 const body_json = {
-	product: "XT-BTC",
+	product: "EUR-USD",
 	side: "buy",
-	size: "10",
-	price: "0.04"
+	type: "market",
+	leverage: 10,
+	amount: 50000,
+	base_currency: "BTC"
 };
 
 const body = JSON.stringify(body_json);
 
 const METHOD = "POST";
 
-const message_to_sign = TIMESTAMP + METHOD + "/order/new" + body;
+const message_to_sign = TIMESTAMP + METHOD + "/trade/new" + body;
 
 const hmac = crypto.createHmac('sha256', API_SECRET);
 
@@ -54,7 +56,7 @@ const WCX_SIG = hmac.update(message_to_sign).digest('base64');
 
 request({
 	method: METHOD,
-	url: "https://api.wcex.com/exchange/order/new",
+	url: "https://api.wcex.com/trading/trade/new",
 	json: body_json,
 	headers: {
 		"WCX-APIKEY": "de53e16e-...",
